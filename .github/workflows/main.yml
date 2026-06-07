@@ -10,13 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      
       - run: npm install -g pnpm
+      
       - run: pnpm install
+      
       - run: pnpm build
-      - uses: actions/upload-artifact@v4
+      
+      - name: List output directory
+        run: |
+          echo "Contenuto di .output:"
+          ls -la .output/ || echo "Cartella .output non esiste"
+          echo ""
+          echo "Cerco chrome-mv3-dev:"
+          ls -la .output/chrome-mv3-dev/ || echo "chrome-mv3-dev non esiste"
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: gemma-gem-chrome
           path: .output/chrome-mv3-dev/
+          if-no-files-found: error
